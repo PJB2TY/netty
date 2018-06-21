@@ -121,8 +121,9 @@ public final class ReferenceCountedOpenSslServerContext extends ReferenceCounted
                     // javadocs state that keyManagerFactory has precedent over keyCertChain, and we must have a
                     // keyManagerFactory for the server so build one if it is not specified.
                     if (keyManagerFactory == null) {
-                        keyMaterialProvider = providerFor(new OpenSslCachingX509KeyManagerFactory(
-                                buildKeyManagerFactory(keyCertChain, key, keyPassword, null)), keyPassword);
+                        keyMaterialProvider = new OpenSslCachingKeyMaterialProvider(
+                                chooseX509KeyManager(buildKeyManagerFactory(keyCertChain, key, keyPassword, null)
+                                        .getKeyManagers()), keyPassword);
                     } else {
                         keyMaterialProvider = providerFor(keyManagerFactory, keyPassword);
                     }

@@ -510,7 +510,7 @@ public abstract class ReferenceCountedOpenSslContext extends SslContext implemen
         throw new IllegalStateException("no X509TrustManager found");
     }
 
-    private static X509KeyManager chooseX509KeyManager(KeyManager[] kms) {
+    protected static X509KeyManager chooseX509KeyManager(KeyManager[] kms) {
         for (KeyManager km : kms) {
             if (km instanceof X509KeyManager) {
                 return (X509KeyManager) km;
@@ -823,7 +823,7 @@ public abstract class ReferenceCountedOpenSslContext extends SslContext implemen
      * ensure that the same material is always returned for the same alias.
      */
     static OpenSslKeyMaterialProvider providerFor(KeyManagerFactory factory, String password) {
-        X509KeyManager keyManager = ReferenceCountedOpenSslContext.chooseX509KeyManager(factory.getKeyManagers());
+        X509KeyManager keyManager = chooseX509KeyManager(factory.getKeyManagers());
         if (factory instanceof OpenSslCachingX509KeyManagerFactory) {
             // The user explicit used OpenSslCachingX509KeyManagerFactory which signals us that its fine to cache.
             return new OpenSslCachingKeyMaterialProvider(keyManager, password);
